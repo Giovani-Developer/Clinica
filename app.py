@@ -2,10 +2,12 @@ from flask import Flask, render_template, redirect, url_for, request
 from extensions import db
 from models import Client
 from datetime import datetime
+import os
+
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///clientes.db"
-app.config["SECRET_KEY"] = "secret"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("postgresql://postgres:qYhrckmHBhmVIMHSREQDCjvjftoGWmZu@postgres.railway.internal:5432/railway")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
@@ -102,6 +104,8 @@ def editar_cliente(id):
 
 
 
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy(app)
 
 if __name__ == "__main__":
     app.run(debug=True)
