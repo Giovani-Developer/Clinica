@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card-modern">
+
+    <h2><i class="bi bi-person-vcard"></i> Ficha do Cliente</h2>
+    <hr>
+
+    <p><strong>Nome:</strong> {{ cliente.nome }}</p>
+    <p><strong>CPF:</strong> {{ cliente.cpf }}</p>
+    <p><strong>Idade:</strong> {{ cliente.idade }}</p>
+    <p><strong>Endereço:</strong> {{ cliente.endereco }}</p>
+    <p><strong>Telefone:</strong> {{ cliente.telefone }}</p>
+    <p><strong>Observações:</strong> {{ cliente.observacoes }}</p>
+
+    <hr>
+
+    <p><strong>Entrada:</strong> {{ cliente.data_entrada.strftime("%d/%m/%Y %H:%M") }}</p>
+
+    <p><strong>Saída:</strong>
+        {% if cliente.data_saida %}
+        {{ cliente.data_saida.strftime("%d/%m/%Y %H:%M") }}
+        {% else %}
+        <a class="btn btn-warning btn-modern" href="{{ url_for('registrar_saida', id=cliente.id) }}">
+            Registrar saída
+        </a>
+        {% endif %}
+    </p>
+
+
+
+    <form action="{{ url_for('excluir_cliente', id=cliente.id) }}" method="POST"
+        onsubmit="return confirm('Tem certeza que deseja EXCLUIR este cliente? Essa ação não pode ser desfeita!');"
+        class="mb-4">
+        <button class="btn btn-danger w-100">
+            <i class="bi bi-trash"></i>Excluir Cliente
+        </button>
+    </form>
+
+    <div class="d-flex gap-3">
+
+    <a href="/" class="btn btn-secondary btn-modern flex-fill">
+        <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+
+    <a href="{{ url_for('editar_cliente', id=cliente.id) }}" class=" btn btn-primary btn-modern flex-fill">Editar
+        Cliente</a>
+        </div>
+</div>
+
+{% endblock %}
