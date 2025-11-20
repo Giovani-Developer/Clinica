@@ -12,20 +12,31 @@ from werkzeug.utils import secure_filename
 import webbrowser
 from threading import Timer
 import subprocess
+from flask import Flask  
 
+
+
+def get_base_path():
+    if getattr(sys, "_MEIPASS", False):
+        return sys._MEIPASS
+    return os.path.abspath(".")
+
+base_path = get_base_path()
 
 def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
     return os.path.join(base_path, relative_path)
 
-app = Flask(__name__, template_folder=resource_path("templates"), static_folder=resource_path("static"))
+app = Flask(
+    __name__,
+    template_folder=os.path.join(base_path, "templates"),
+    static_folder=os.path.join(base_path, "static")
+)
+
+DB_PATH = os.path.join(base_path, "reabilitacao.db")
+
 app.secret_key = 'chave_secreta_reabilitacao_2024'
 
-UPLOAD_FOLDER = resource_path("uploads")
+UPLOAD_FOLDER = os.path.join(base_path, "uploads")
 ALLOWED_EXTENSIONS = {'pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'txt'}
 
 if not os.path.exists(UPLOAD_FOLDER):
@@ -42,7 +53,7 @@ _thread_local = threading.local()
 def get_db():
     """Obtém conexão SQLite com configurações otimizadas para evitar locks"""
     if not hasattr(_thread_local, 'db'):
-        conn = sqlite3.connect('reabilitacao.db', timeout=30.0, check_same_thread=False)
+        conn = sqlite3.connect(DB_PATH, timeout=30.0, check_same_thread=False)
         conn.execute('PRAGMA journal_mode = WAL')  
         conn.execute('PRAGMA synchronous = NORMAL')
         conn.execute('PRAGMA cache_size = -64000')  
@@ -750,14 +761,20 @@ def abrir_navegador_fullscreen():
     if os.path.exists(chrome_path):
         subprocess.Popen([
             chrome_path,
-            "--start-fullscreen",       # abre em fullscreen sem F11
-            "--kiosk",                  # modo quiosque (sem barra de endereço)
+            "--start-fullscreen",
+            "--kiosk",
             "http://127.0.0.1:5000"
         ])
     else:
-        # fallback caso o chrome não exista
         webbrowser.open("http://127.0.0.1:5000")
 
+
 if __name__ == "__main__":
-    threading.Timer(1, abrir_navegador_fullscreen).start()
-    app.run()
+    with app.app_context():
+        init_db()
+
+    # CHAMA O NAVEGADOR AQUI (antes de iniciar o Flask)
+    abrir_navegador_fullscreen()
+
+    # debug deve ser False para PyInstaller
+    app.run(debug=False, host="127.0.0.1", port=5000)
