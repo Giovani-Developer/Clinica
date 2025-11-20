@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Ficha - {{ ficha[5] }}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            color: #2d3748;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #718096;
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .info-box {
+            background-color: #bee3f8;
+            border-left: 4px solid #4299e1;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            color: #2c5282;
+        }
+        
+        .info-box strong {
+            font-size: 1.1em;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        .required {
+            color: #e53e3e;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #2d3748;
+            width: 100%;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #cbd5e0;
+        }
+        
+        .help-text {
+            font-size: 0.85em;
+            color: #718096;
+            margin-top: 4px;
+        }
+        
+        .medicamentos-section {
+            background: #f7fafc;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .medicamento-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 2px solid #e2e8f0;
+            position: relative;
+        }
+        
+        .medicamento-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .medicamento-item input,
+        .medicamento-item textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+        
+        .medicamento-item textarea {
+            grid-column: 1 / -1;
+            resize: vertical;
+            min-height: 60px;
+        }
+        
+        .btn-remove-med {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2em;
+            line-height: 1;
+        }
+        
+        .btn-remove-med:hover {
+            background: #e53e3e;
+        }
+        
+        .btn-add-med {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        .btn-add-med:hover {
+            background: #38a169;
+        }
+        
+        .no-medicamentos {
+            color: #a0aec0;
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+        }
+        
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .alert-error {
+            background-color: #fed7d7;
+            color: #742a2a;
+            border-left: 4px solid #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✏️ Editar Ficha</h1>
+            <p class="subtitle">Atualizar dados da ficha de tratamento</p>
+            <button class="theme-toggle" id="themeToggle" title="Alternar Tema">🌙</button>
+        </header>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="info-box">
+            <strong>Cliente:</strong> {{ ficha[5] }}<br>
+            <strong>CPF:</strong> {{ ficha[6] }}
+        </div>
+        
+        <form method="POST" id="formEditarFicha">
+            <div class="form-group">
+                <label for="data_entrada">Data de Entrada na Clínica <span class="required">*</span></label>
+                <input type="date" id="data_entrada" name="data_entrada" value="{{ ficha[2] }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="data_saida">Data de Saída da Clínica</label>
+                <input type="date" id="data_saida" name="data_saida" value="{{ ficha[3] if ficha[3] else '' }}">
+                <p class="help-text">Deixe em branco se o paciente ainda está em tratamento</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="observacoes">Observações</label>
+                <textarea id="observacoes" name="observacoes">{{ ficha[4] if ficha[4] else '' }}</textarea>
+            </div>
+            
+            <div class="medicamentos-section">
+                <div class="section-title">
+                    💊 Medicamentos
+                </div>
+                <div id="medicamentos-container">
+                    <div class="no-medicamentos">Carregando medicamentos...</div>
+                </div>
+                <button type="button" class="btn-add-med" onclick="adicionarMedicamento()">➕ Adicionar Medicamento</button>
+            </div>
+            
+            <input type="hidden" id="medicamentos_data" name="medicamentos_data" value="[]">
+            <input type="hidden" id="medicamentos-data-json" value="{{ medicamentos_json }}">
+            
+            <button type="submit" class="btn btn-primary">💾 Salvar Alterações</button>
+            <a href="/cliente/{{ ficha[1] }}" class="btn btn-secondary">← Voltar</a>
+        </form>
+    </div>
+    
+    <script src="/static/theme.js"></script>
+    <script>
+        let medicamentos = [];
+        
+        function inicializarMedicamentos(dadosJson) {
+            try {
+                medicamentos = JSON.parse(dadosJson);
+            } catch (e) {
+                console.error('Erro ao parsear medicamentos:', e);
+                medicamentos = [];
+            }
+            renderizarMedicamentos();
+        }
+        
+        function adicionarMedicamento() {
+            const id = Date.now();
+            medicamentos.push({
+                id: id,
+                nome: '',
+                dosagem: '',
+                frequencia: '',
+                observacoes: ''
+            });
+            renderizarMedicamentos();
+        }
+        
+        function removerMedicamento(id) {
+            medicamentos = medicamentos.filter(m => m.id !== id);
+            renderizarMedicamentos();
+        }
+        
+        function atualizarMedicamento(id, campo, valor) {
+            const med = medicamentos.find(m => m.id === id);
+            if (med) {
+                med[campo] = valor;
+            }
+        }
+        
+        function renderizarMedicamentos() {
+            const container = document.getElementById('medicamentos-container');
+            
+            if (medicamentos.length === 0) {
+                container.innerHTML = '<div class="no-medicamentos">Nenhum medicamento adicionado. Clique em "Adicionar Medicamento" para começar.</div>';
+                return;
+            }
+            
+            container.innerHTML = medicamentos.map(med => `
+                <div class="medicamento-item">
+                    <button type="button" class="btn-remove-med" onclick="removerMedicamento(${med.id})">×</button>
+                    <div class="medicamento-grid">
+                        <input type="text" placeholder="Nome do medicamento *" value="${med.nome}" 
+                               onchange="atualizarMedicamento(${med.id}, 'nome', this.value)">
+                        <input type="text" placeholder="Dosagem (ex: 10mg)" value="${med.dosagem}"
+                               onchange="atualizarMedicamento(${med.id}, 'dosagem', this.value)">
+                        <input type="text" placeholder="Frequência (ex: 2x/dia)" value="${med.frequencia}"
+                               onchange="atualizarMedicamento(${med.id}, 'frequencia', this.value)">
+                        <textarea placeholder="Observações sobre o medicamento" 
+                                  onchange="atualizarMedicamento(${med.id}, 'observacoes', this.value)">${med.observacoes}</textarea>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        document.getElementById('formEditarFicha').addEventListener('submit', function(e) {
+            document.getElementById('medicamentos_data').value = JSON.stringify(medicamentos);
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const dadosMedicamentos = document.getElementById('medicamentos-data-json')?.textContent || '[]';
+            inicializarMedicamentos(dadosMedicamentos);
+        });
+    </script>
+</body>
+</html>
