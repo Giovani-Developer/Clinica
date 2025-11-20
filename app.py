@@ -9,6 +9,10 @@ from io import StringIO
 import os
 import sys
 from werkzeug.utils import secure_filename
+import webbrowser
+from threading import Timer
+import subprocess
+
 
 def resource_path(relative_path):
     try:
@@ -740,6 +744,20 @@ def deletar_documento(doc_id):
         flash(f'Erro ao deletar documento: {str(e)}', 'error')
         return redirect(url_for('index'))
 
-if __name__ == '__main__':
-    init_db()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+def abrir_navegador_fullscreen():
+    chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+
+    if os.path.exists(chrome_path):
+        subprocess.Popen([
+            chrome_path,
+            "--start-fullscreen",       # abre em fullscreen sem F11
+            "--kiosk",                  # modo quiosque (sem barra de endereço)
+            "http://127.0.0.1:5000"
+        ])
+    else:
+        # fallback caso o chrome não exista
+        webbrowser.open("http://127.0.0.1:5000")
+
+if __name__ == "__main__":
+    threading.Timer(1, abrir_navegador_fullscreen).start()
+    app.run()
