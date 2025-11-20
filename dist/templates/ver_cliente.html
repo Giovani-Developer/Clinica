@@ -272,7 +272,7 @@
                 <button onclick="window.print()" class="btn btn-print">Imprimir</button>
                 <button onclick="exportarPDF()" class="btn btn-export">Exportar PDF</button>
                 <a href="/editar/{{ cliente[0] }}" class="btn btn-edit">Editar</a>
-                <a href="/deletar/{{ cliente[0] }}" class="btn btn-delete" onclick="return confirm('Tem certeza?')">Deletar</a>
+                <a href="/deletar/{{ cliente[0] }}" class="btn btn-delete" onclick="return confirm('Tem certeza que deseja deletar?')">Deletar</a>
                 <a href="/" class="btn btn-back">Voltar</a>
             </div>
         </div>
@@ -395,7 +395,7 @@
             {% endfor %}
         {% else %}
         <div class="no-fichas">
-            <p>Nenhuma ficha de tratamento cadastrada para este cliente.</p>
+            <p>Nenhuma ficha de tratamento cadastrada para este Paciente.</p>
         </div>
         {% endif %}
     </div>

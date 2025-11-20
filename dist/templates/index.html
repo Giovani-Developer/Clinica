@@ -486,8 +486,8 @@
 
     <div class="container">
         <header>
-            <h1>Centro de Reabilitação</h1>
-            <p class="subtitle">Sistema de Gerenciamento de Clientes</p>
+            <h1>Centro Terapêutico - GAUAD</h1>
+            <p class="subtitle">Sistema de Gerenciamento de Pacientes</p>
         </header>
         
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -503,7 +503,7 @@
         <div class="stats-container">
             <div class="stat-card">
                 <div class="stat-number">{{ total }}</div>
-                <div>Total de Clientes</div>
+                <div>Total de Pacientes</div>
             </div>
             <div class="stat-card" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);">
                 <div class="stat-number">{{ ativos }}</div>
@@ -558,7 +558,7 @@
         {% endif %}
         
         <div style="margin-bottom: 30px;">
-            <a href="/cadastrar" class="btn btn-primary">Cadastrar Novo Cliente</a>
+            <a href="/cadastrar" class="btn btn-primary">Cadastrar Novo Paciente</a>
             <a href="/exportar-csv" class="btn" style="background: #ed8936; color: white; margin-left: 12px;">Exportar CSV</a>
         </div>
         
@@ -601,8 +601,8 @@
             {% endfor %}
         {% else %}
         <div class="empty-state">
-            <h2>Nenhum cliente encontrado</h2>
-            <p>{% if busca or status or data_inicio or data_fim %}Tente ajustar os filtros ou{% else %}Comece{% endif %} cadastrando o primeiro cliente do centro de reabilitação.</p>
+            <h2>Nenhum paciente encontrado</h2>
+            <p>{% if busca or status or data_inicio or data_fim %}Tente ajustar os filtros ou{% else %}Comece{% endif %} cadastrando o primeiro paciente do centro de reabilitação.</p>
         </div>
         {% endif %}
     </div>
